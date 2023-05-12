@@ -16,6 +16,10 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        if (! $app->environment('testing')) {
+            throw new \Exception('Not in testing environment. Make sure your environment is set up correctly and/or you have run php artisan config:clear');
+        }
+
         return $app;
     }
 }
