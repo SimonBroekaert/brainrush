@@ -1,66 +1,206 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Brain Rush
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Structure
 
-## About Laravel
+### Users
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#### Data structure
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- `id` - integer
+- `username` - string
+- `email` - string
+- `password` - string
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Relations
 
-## Learning Laravel
+- `belongsToMany` - `groups`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Functionality
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- User can register
+- User can login
+- User can logout
+- User can change password
+- User can delete account and all related data
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Groups
 
-## Laravel Sponsors
+#### Data structure
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- `id` - integer
+- `name` - string
+- `description` - string
 
-### Premium Partners
+#### Relations
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- `belongsToMany` - `users`
 
-## Contributing
+#### Functionality
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- User can create group
+- User can delete group
+- User can update group
+- User can leave group
+- User can accept invite to group
+- User can decline invite to group
+- User can invite user to group
+- User can remove user from group
+- New owner needs to be chosen if current owner leaves group
+- User can assign a new owner to group
 
-## Code of Conduct
+### GroupUser
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Data structure
 
-## Security Vulnerabilities
+- `id` - integer
+- `group_id` - integer
+- `user_id` - integer
+- `type` - enum (owner, member, invited)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Quizzes
 
-## License
+#### Data structure
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- `id` - integer
+- `name` - string
+- `description` - string
+- `group_id` - integer
+- `user_id` - integer
+- `is_public` - boolean
+- `is_online`: boolean
+
+#### Relations
+
+- `belongsTo` - `groups`
+- `belongsTo` - `users`
+- `hasMany` - `questions`
+- `belongsToMany` - `users`
+
+#### Functionality
+
+- User can create quiz
+- User can delete quiz
+- User can update quiz
+- User can start quiz
+- User can stop quiz
+- User can invite user to quiz
+- User can invite group to quiz (invites all users in group)
+- User can remove user from quiz
+- User can accept invite to quiz
+- User can decline invite to quiz
+- User can leave quiz
+- User can view statistics of quiz
+
+### Questions
+
+#### Data structure
+
+- `id` - integer
+- `quiz_id` - integer
+- `question` - string
+- `type` - enum (multiple_choice, single_choice, open, true_or_false)
+- `time_limit` - integer
+
+#### Relations
+
+- `belongsTo` - `quizzes`
+- `hasMany` - `choices`
+- `hasMany` - `answers`
+
+### Functionality
+
+- User can create question
+- User can delete question
+- User can update question
+
+### Choices
+
+#### Data structure
+
+- `id` - integer
+- `question_id` - integer
+- `choice` - string
+- `is_correct` - boolean
+
+#### Relations
+
+- `belongsTo` - `questions`
+
+#### Functionality
+
+- User can create choice
+- User can delete choice
+- User can update choice
+- User can mark choice as correct/incorrect
+
+### Answers
+
+#### Data structure
+
+- `id` - integer
+- `session_id` - integer
+- `question_id` - integer
+- `session_question_id` - integer
+- `user_id` - integer
+- `choice_id` - string
+- `answer` - string
+- `is_correct` - boolean
+
+#### Relations
+
+- `belongsTo` - `questions`
+- `belongsTo` - `users`
+- `belongsTo` - `choices`
+
+#### Functionality
+
+- User can create answer
+
+### Quiz sessions
+
+#### Data structure
+
+- `id` - integer`
+- `quiz_id` - integer
+- `user_id` - integer
+- `started_at` - datetime
+- `ended_at` - datetime
+- `is_active` - boolean
+
+#### Relations
+
+- `belongsTo` - `quizzes`
+- `hasMany` - `quiz_session_users`
+- `hasMany` - `answers`
+
+#### Functionality
+
+- User can start quiz session
+- User can stop quiz session
+- User can view statistics of quiz session
+
+### Quiz session users
+
+#### Data structure
+
+- `id` - integer
+- `quiz_session_id` - integer
+- `user_id` - integer
+- `is_active` - boolean
+
+#### Relations
+
+- `belongsTo` - `quiz_sessions`
+- `belongsTo` - `users`
+- `hasMany` - `answers`
+
+### Quiz session questions
+
+#### Data structure
+
+- `id` - integer
+- `quiz_session_id` - integer
+- `question_id` - integer
+- `is_active` - boolean
+- `started_at` - datetime
+- `ended_at` - datetime
